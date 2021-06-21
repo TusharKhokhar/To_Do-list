@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>image</title>
+</head>
+
+<body>
+    <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-analytics.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-storage.js"></script>
+
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyC8u4DXv-tnpGL4HIR4ImrFqvrS8hiKQ8Q",
+            authDomain: "javascript-2525.firebaseapp.com",
+            projectId: "javascript-2525",
+            storageBucket: "javascript-2525.appspot.com",
+            messagingSenderId: "308544058300",
+            appId: "1:308544058300:web:f1bd18ae63d13c99bdf1b9",
+            measurementId: "G-ZB18Y9E6E8"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+    </script>
+    
+     <div class="mainDiv" align="right">
+        <h1 align="left">Firebase File Upload</h1>
+        <progress id="uploader" value="0" max="100">0%</progress>
+        <input type="file" id="fileButton" value="upload" />
+    </div>
+    <script>
+        var uploader = document.getElementById('uploader');
+        var fileButton = document.getElementById('fileButton');
+        console.log(fileButton);
+        fileButton.addEventListener('change', function (e) {
+            var file = e.target.files[0];
+            console.log(file);
+            var storageRef = firebase.storage().ref('images/' + file.name);
+            var task = storageRef.put(file);
+            task.on('state_changed', function progress(snapshot) {
+                var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                uploader.value = percentage;
+
+            }, function error(err) {
+
+
+            }, function complete() {
+                task.snapshot.ref.getDownloadURL().then(
+                function(downloadURL) {
+                console.log('File available at', downloadURL);
+  
+               console.log(downloadURL);
+            //    firebase.firestore().collection("signup_user").doc(localStorage.getItem('uid')).update({
+            //        imageUrl:downloadURL
+            //    })
+            });
+              
+            });
+        })
+    
+    </script>
+    <img height=" 300px" width="300px" id="img" src="https://firebasestorage.googleapis.com/v0/b/javascript-2525.appspot.com/o/images%2FIMG_20190225_224603.jpg?alt=media&token=bfe4aaa1-1e23-4b02-8689-c0c3744ee939">
+    <!-- <input type="button" value="view Image" id="viewbtn" onclick="showimage();">
+    <img id="myimg" height="125px" width="200px" /> -->
+</body>
+
+</html>
